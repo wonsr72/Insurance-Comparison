@@ -14646,7 +14646,7 @@ Net.cfg = function () {
 };
 Net.saveCfg = c => { try { localStorage.setItem(CFGK, JSON.stringify(c)); } catch (e) { } };
 const txt = (url, ms) => { const c = new AbortController(), t = setTimeout(() => c.abort(), ms || 15000); return fetch(url, { signal: c.signal }).then(r => r.text().then(b => { if (!r.ok && !b) throw new Error('HTTP ' + r.status); return b; })).finally(() => clearTimeout(t)); };
-Net.proxyUp = async function () { const c = Net.cfg(); try { const t = await txt(c.proxy + '/ping', 2500); return /ok/.test(t); } catch (e) { return false; } };
+Net.proxyUp = async function () { const c = Net.cfg(); try { const t = await txt(c.proxy + '/ping', 2500); return /^\s*"?ok\b/i.test(t); } catch (e) { return false; } };   // 「ok」로 시작할 때만 인정(GitHub Pages 등의 404 안내 글에 ok가 섞여도 연동서버로 오인하지 않음)
 /** 연동서버가 꺼져 있으면 스스로 켠다.
  *  브라우저는 프로그램을 직접 실행할 수 없으므로, 「실행.bat」이 PC에 등록해 둔 'bojangproxy://' 연결 주소로 연동서버 시작기를 부른다.
  *  (처음 한 번 브라우저가 「열까요?」를 물으면 「항상 허용」을 선택)  → {ok, already, how, why} */
@@ -23988,7 +23988,9 @@ if (typeof module !== 'undefined' && module.exports) module.exports = BJ;
   {date:"2026-11-26",time:"03:40",title:"일반사용자용: 상해 「5대골절 진단비」를 담으면 이름이 「상해 5대골절진단비 5대골절진단비」로 나오던 것을 「5대골절 진단비」로 수정",desc:"n종 수술비처럼 숫자로 시작하는 담보 앞에 구분 이름을 붙이는 규칙이 5대골절에도 적용되어 이름이 겹쳐 나오던 문제를 고쳤습니다. 5대골절 진단비·수술비는 앞에 이름을 붙이지 않고 「5대골절 진단비」처럼 띄어 쓴 이름으로 장바구니에 담깁니다(분류 기준은 그대로)."},
   {date:"2026-11-26",time:"09:50",title:"D-day 문자·카톡 안내 문구: 365일부터는 일수 대신 년수로 표시",desc:"「상품이 730일이나 되었네요!」가 365일 이후에는 「1년이나」, 「2년이나」로 나옵니다(365일 미만은 30일·90일·180일 그대로). 년수 뒤에 30일 이상 남으면 「1년 3개월」처럼 개월을 덧붙입니다. D-day 팝업과 고객 연락 버튼의 문구에 모두 적용됩니다."},
   {date:"2026-11-26",time:"11:45",title:"일반사용자용 비교견적표: 보험사 머리글 더블클릭으로 열 숨김 + 숨김 해제 단추",desc:"비교견적 결과표에서 보험사 머리글을 두 번 누르면 그 보험사 열이 숨겨지고, 표 위에 「숨긴 열 N개 · 👁 ○○ 보이기 · 숨김 해제(모두 보이기)」 줄이 생깁니다. 월 보험료 합계와 최저가(초록색)는 보이는 열끼리만 다시 계산합니다. 마지막 한 열은 숨길 수 없고, 열을 모두 숨기려 하면 자동으로 되돌립니다."},
-  {date:"2026-11-26",time:"12:20",title:"담보 두뇌 학습창을 보험사별 카드 형식으로 재구성",desc:"여러 보험사가 섞여 실수하기 쉽던 학습창을 「특정 담보 찾아 추가」와 같은 틀로 바꿨습니다. 보험사마다 카드가 따로 생겨 ① 그 보험사 안에서만 담보 검색 ② 담보별 분류(진단비·치료비·수술비·입원비·기타·상단) 확인·수정 후 「확정」 ③ 「이 보험사 모두 확정」 ④ 「이 보험사 채점」(기존 방식 vs 두뇌 정확도)을 할 수 있습니다. 위쪽에는 모든 보험사 한꺼번에 검색·정렬과 전체 채점 요약이 있고, 확정·수정 때는 해당 카드만 다시 그려 스크롤 위치가 유지됩니다. 또한 닮은 꼴 판정의 비중을 조정해 오분류를 줄였습니다."}
+  {date:"2026-11-26",time:"12:20",title:"담보 두뇌 학습창을 보험사별 카드 형식으로 재구성",desc:"여러 보험사가 섞여 실수하기 쉽던 학습창을 「특정 담보 찾아 추가」와 같은 틀로 바꿨습니다. 보험사마다 카드가 따로 생겨 ① 그 보험사 안에서만 담보 검색 ② 담보별 분류(진단비·치료비·수술비·입원비·기타·상단) 확인·수정 후 「확정」 ③ 「이 보험사 모두 확정」 ④ 「이 보험사 채점」(기존 방식 vs 두뇌 정확도)을 할 수 있습니다. 위쪽에는 모든 보험사 한꺼번에 검색·정렬과 전체 채점 요약이 있고, 확정·수정 때는 해당 카드만 다시 그려 스크롤 위치가 유지됩니다. 또한 닮은 꼴 판정의 비중을 조정해 오분류를 줄였습니다."},
+  {date:"2026-11-26",time:"14:00",title:"웹서버를 Netlify와 GitHub Pages 두 곳에서 함께 쓸 수 있도록 정비",desc:"프로그램은 모든 주소를 상대 경로로 쓰므로 https://wonsr72.github.io/Insurance-Comparison/ 같은 하위 폴더 주소에서도 그대로 열립니다(설치 정보·서비스워커 범위 포함). 연동서버 확인(ping)이 GitHub의 404 안내 글을 「ok」로 오인하지 않도록 엄격하게 고쳤고, 웹서버 폴더에 .nojekyll·404.html과 두 곳 모두에 올리는 안내(웹서버_올리기_안내.txt)를 추가했습니다."},
+  {date:"2026-11-26",time:"14:30",title:"프로그램 설정(구글시트 연결): 웹서버 주소 2개 저장·선택",desc:"「폰에서 열 웹 앱 주소」가 1개뿐이던 것을 「웹서버 1 주소」(예: 기존 웹서버)·「웹서버 2 주소」(예: GitHub Pages) 두 칸으로 늘리고, 연결 링크·코드에 쓸 서버를 「자동 / 웹서버 1 / 웹서버 2」에서 고르게 했습니다. 자동은 지금 열린 웹 주소를 쓰고, 파일로 열었을 때는 웹서버 1·2 순서로 씁니다. 다른 기기에서 받은 연결 링크의 주소는 비어 있는 칸에 자동 저장됩니다."}
 ];})(typeof window !== 'undefined' ? window : globalThis);
 
 ;
@@ -26420,12 +26422,21 @@ const K_WEB = 'bj-webapp-url';
 const b64u = t => btoa(unescape(encodeURIComponent(t))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 const unb64u = t => { t = String(t).replace(/-/g, '+').replace(/_/g, '/'); while (t.length % 4) t += '='; return decodeURIComponent(escape(atob(t))); };
 /** 폰·다른 PC에서 열 웹 앱 주소(웹 서버에서 열었다면 그 주소를 자동으로 씀) */
-G.webUrl = () => (/^https?:$/.test(root.location.protocol) ? root.location.origin + root.location.pathname : '') || lsGet(K_WEB).trim();
+/* 웹서버를 두 곳(예: Netlify · GitHub Pages)까지 적어 두고, 연결 링크·코드에 어느 주소를 쓸지 고를 수 있습니다. 「자동」이면 지금 열린 웹 주소(없으면 웹서버 1·2) */
+const K_WEB2 = 'bj-webapp-url2', K_WEBSEL = 'bj-webapp-sel';
+G.webSaved = () => [lsGet(K_WEB).trim(), lsGet(K_WEB2).trim()];
+G.webSel = () => { const v = lsGet(K_WEBSEL); return v === '1' || v === '2' ? v : 'auto'; };
+G.webUrl = () => { const sv = G.webSaved(), sl = G.webSel(); if (sl === '1' && sv[0]) return sv[0]; if (sl === '2' && sv[1]) return sv[1]; return (/^https?:$/.test(root.location.protocol) ? root.location.origin + root.location.pathname : '') || sv[0] || sv[1]; };
+G.webRows = () => { const sv = G.webSaved(), sl = G.webSel(), now = /^https?:$/.test(root.location.protocol) ? root.location.origin + root.location.pathname : '';
+  return '<div class="row" style="gap:6px"><label class="small">웹서버 1 주소</label><input type="text" id="gsWeb" style="flex:1;min-width:200px" placeholder="예: 첫 번째 웹서버 주소 https://…/" value="' + esc(sv[0]) + '"></div>' +
+    '<div class="row" style="gap:6px"><label class="small">웹서버 2 주소</label><input type="text" id="gsWeb2" style="flex:1;min-width:200px" placeholder="예: https://wonsr72.github.io/Insurance-Comparison/" value="' + esc(sv[1]) + '"></div>' +
+    '<div class="row" style="gap:6px"><label class="small">연결 링크에 쓸 서버</label><select id="gsWebSel"><option value="auto"' + (sl === 'auto' ? ' selected' : '') + '>자동(지금 열린 주소' + (now ? '' : ' · 없으면 웹서버 1·2') + ')</option><option value="1"' + (sl === '1' ? ' selected' : '') + '>웹서버 1</option><option value="2"' + (sl === '2' ? ' selected' : '') + '>웹서버 2</option></select><span class="small muted">폰으로 보낼 링크가 이 서버 주소로 만들어집니다</span></div>'; };
+G.webSave = q => { const a = q('#gsWeb'), b = q('#gsWeb2'), c = q('#gsWebSel'); if (a) lsSet(K_WEB, a.value.trim()); if (b) lsSet(K_WEB2, b.value.trim()); if (c) lsSet(K_WEBSEL, c.value); };
 G.connCode = () => G.url() ? 'BJC1.' + b64u(JSON.stringify({ u: G.url(), k: G.key(), c: lsGet(K_CID), w: G.webUrl() })) : '';
 G.connLink = () => { const w = G.webUrl(), c = G.connCode(); return c && w ? w.replace(/#.*$/, '') + '#bjconn=' + c.slice(5) : ''; };
 /** 글(링크·코드)에서 연결 정보를 꺼냄 → {u,k,c,w} | null */
 G.parseConn = t => { const m = /(?:BJC1\.|bjconn=)([A-Za-z0-9_-]{20,})/.exec(String(t || '')); if (!m) return null; try { const o = JSON.parse(unb64u(m[1])); return o && /^https?:\/\//.test(o.u || '') ? o : null; } catch (e) { return null; } };
-G.applyConn = o => { G.setConfig(o.u, o.k || '', true, o.c || ''); if (o.w && !/^https?:$/.test(root.location.protocol)) lsSet(K_WEB, o.w); };
+G.applyConn = o => { G.setConfig(o.u, o.k || '', true, o.c || ''); if (o.w && !/^https?:$/.test(root.location.protocol)) { const sv = G.webSaved(); if (sv.indexOf(o.w) < 0) { if (!sv[0]) lsSet(K_WEB, o.w); else if (!sv[1]) lsSet(K_WEB2, o.w); else lsSet(K_WEB, o.w); } } };
 { const m = /[#&]bjconn=([A-Za-z0-9_-]{20,})/.exec(root.location.hash || '');
   if (m) { const o = G.parseConn('bjconn=' + m[1]); try { root.history.replaceState(null, '', root.location.pathname + root.location.search); } catch (e) { }
     if (o) { G.applyConn(o); setTimeout(() => { try { UI.toast('☁ 연결 링크로 구글시트 연결을 설정했습니다. (이 기기에서는 따로 입력할 필요가 없습니다)', 6000); if (BJ.WS) BJ.WS.sync(true); } catch (e) { } }, 1200); } } }
@@ -26439,7 +26450,7 @@ UI.sheetDialog = function () {
     '<div style="margin-top:8px"><label class="small">웹 앱 URL</label><input type="text" id="gsUrl" style="width:100%" placeholder="https://script.google.com/macros/s/…/exec" value="' + esc(G.url()) + '"></div>' +
     '<div style="margin-top:6px"><label class="small">비밀번호(선택 · 코드의 KEY와 같게)</label><input type="text" id="gsKey" size="24" value="' + esc(G.key()) + '" autocomplete="off"></div>' +
     '<div class="gs-conn"><b>📲 다른 기기에 연결 (한 번만 입력하면 됩니다)</b><div class="small muted" style="margin:3px 0">위 웹 앱 URL을 이 기기에 한 번 저장한 뒤, 아래 <b>연결 링크</b>를 폰·다른 PC의 브라우저에서 열면 그 기기에도 같은 연결이 자동으로 적용됩니다(카카오톡 「나에게 보내기」·문자 등으로 보내세요). 링크에는 비밀번호가 들어 있으니 본인에게만 보내세요.</div>' +
-    '<div class="row" style="gap:6px"><label class="small">폰에서 열 웹 앱 주소</label><input type="text" id="gsWeb" style="flex:1;min-width:200px" placeholder="https://내-웹앱-주소/" value="' + esc(G.webUrl()) + '"' + (/^https?:$/.test(root.location.protocol) ? ' readonly' : '') + '></div>' +
+    G.webRows() +
     '<div class="row" style="gap:6px;margin-top:4px"><button class="btn sm" id="gsLinkCp">🔗 연결 링크 복사</button><button class="btn sm" id="gsCodeCp">🔑 연결 코드 복사</button><span class="small" id="gsConnMsg"></span></div>' +
     '<div class="row" style="gap:6px;margin-top:6px"><label class="small">받은 링크·코드 붙여넣기</label><input type="text" id="gsPaste" style="flex:1;min-width:200px" placeholder="링크 또는 BJC1.… 코드"><button class="btn sm" id="gsPasteOk">적용</button></div></div>' +
     '<label style="display:block;margin-top:8px"><input type="checkbox" id="gsOn" style="width:auto"' + (lsGet(K_ON) === '0' ? '' : ' checked') + '> 구글시트에 저장·불러오기 사용</label>' +
@@ -26451,12 +26462,12 @@ UI.sheetDialog = function () {
     q('#gsClose').onclick = close;
     q('#gsDiag').onclick = () => { store(); if (UI.syncDiag) UI.syncDiag(); };
     q('#gsCopy').onclick = async () => { try { await navigator.clipboard.writeText(G.SCRIPT); q('#gsCopyMsg').textContent = '복사했습니다.'; } catch (e) { const ta = document.createElement('textarea'); ta.value = G.SCRIPT; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); q('#gsCopyMsg').textContent = '복사했습니다.'; } catch (x) { q('#gsCopyMsg').textContent = '복사에 실패했습니다.'; } ta.remove(); } };
-    const conn = t => { const o = G.parseConn(t); if (!o) return false; G.applyConn(o); q('#gsUrl').value = o.u; q('#gsKey').value = o.k || ''; q('#gsOn').checked = true; if (o.w && q('#gsWeb') && !q('#gsWeb').readOnly) q('#gsWeb').value = o.w; return true; };
+    const conn = t => { const o = G.parseConn(t); if (!o) return false; G.applyConn(o); q('#gsUrl').value = o.u; q('#gsKey').value = o.k || ''; q('#gsOn').checked = true; if (o.w && q('#gsWeb') && !q('#gsWeb').value) q('#gsWeb').value = o.w; return true; };
     q('#gsUrl').addEventListener('input', () => { const v = q('#gsUrl').value; if (/BJC1\.|bjconn=/.test(v) && conn(v)) { out.className = 'small ok'; out.textContent = '✔ 연결 코드를 읽어 적용했습니다.'; } });
     q('#gsPasteOk').onclick = () => { if (conn(q('#gsPaste').value)) { q('#gsConnMsg').textContent = '✔ 적용했습니다.'; out.className = 'small ok'; out.textContent = '✔ 연결을 적용했습니다. [연결 확인]을 눌러 보세요.'; if (BJ.WS) BJ.WS.sync(true); } else q('#gsConnMsg').textContent = '링크·코드를 읽지 못했습니다.'; };
     const cp = async (t, ok) => { if (!t) { q('#gsConnMsg').textContent = '먼저 위 웹 앱 URL을 저장하세요.'; return; } try { await navigator.clipboard.writeText(t); } catch (e) { const ta = document.createElement('textarea'); ta.value = t; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); } catch (x) { } ta.remove(); } q('#gsConnMsg').textContent = ok; };
-    q('#gsLinkCp').onclick = () => { store(); const w = q('#gsWeb').value.trim(); if (w && !q('#gsWeb').readOnly) lsSet(K_WEB, w); const l = G.connLink(); if (!l) { q('#gsConnMsg').textContent = '폰에서 열 웹 앱 주소를 먼저 적어 주세요(코드는 복사 가능).'; return; } cp(l, '✔ 링크를 복사했습니다. 폰·다른 PC에서 여세요.'); };
-    q('#gsCodeCp').onclick = () => { store(); const w = q('#gsWeb').value.trim(); if (w && !q('#gsWeb').readOnly) lsSet(K_WEB, w); cp(G.connCode(), '✔ 코드를 복사했습니다. 다른 기기 설정의 「붙여넣기」 칸에 넣으세요.'); };
+    q('#gsLinkCp').onclick = () => { store(); G.webSave(q); const l = G.connLink(); if (!l) { q('#gsConnMsg').textContent = '폰에서 열 웹 앱 주소를 먼저 적어 주세요(코드는 복사 가능).'; return; } cp(l, '✔ 링크를 복사했습니다. 폰·다른 PC에서 여세요.'); };
+    q('#gsCodeCp').onclick = () => { store(); G.webSave(q); cp(G.connCode(), '✔ 코드를 복사했습니다. 다른 기기 설정의 「붙여넣기」 칸에 넣으세요.'); };
     q('#gsSave').onclick = () => { store(); out.className = 'small ok'; out.textContent = '✔ 저장했습니다.'; UI.toast('구글시트 연결 설정을 저장했습니다.', 3000); };
     q('#gsTest').onclick = async () => { store(); out.className = 'small'; out.textContent = '확인 중…'; try { await G.ping(); out.className = 'small ok'; out.textContent = '✔ 구글시트에 연결되었습니다.'; } catch (e) { out.className = 'small bad'; out.textContent = '✘ ' + e.message; } };
   });
@@ -26534,7 +26545,7 @@ UI.sheetDialog = function () {
     step(4, '웹 앱 URL 붙여넣기', '<input type="text" id="gsUrl" style="width:100%" autocomplete="off" placeholder="https://script.google.com/macros/s/…/exec" value="' + esc(G.url()) + '">' + msg('gsUrlMsg')) +
     step(5, '점검하기', '<div class="row" style="gap:8px"><button class="btn primary" id="gsDiag" type="button">🔧 전체 점검 (권장)</button><button class="btn" id="gsTest" type="button">연결만 확인</button></div><div id="gsOut" class="small" style="margin-top:6px"></div><div class="small muted">전체 점검은 주소·비밀번호·버전·시트 연결·읽기·쓰기를 차례로 확인하고, 고객정보 시트 ID도 서버에 자동 저장합니다(코드를 다시 고치거나 배포하지 않아도 됩니다).</div>') +
     '<div class="gs-conn"><b>📲 다른 기기에 연결 — 연결 링크 (웹 주소 한 번 입력 → PC·폰 모두 적용)</b><div class="small muted" style="margin:3px 0">이 기기에서 연결을 저장한 뒤 <b>연결 링크</b>를 만들어 폰·다른 PC에서 열면(카톡 「나에게」 등) 주소·비밀번호·고객정보 시트가 그 기기에도 자동 적용됩니다. 링크에는 비밀번호가 들어 있으니 본인만 쓰세요.</div>' +
-    '<div class="row" style="gap:6px"><label class="small">폰에서 열 웹 앱 주소</label><input type="text" id="gsWeb" style="flex:1;min-width:200px" placeholder="https://내-웹앱-주소/" value="' + esc(G.webUrl()) + '"' + (/^https?:$/.test(root.location.protocol) ? ' readonly' : '') + '></div>' +
+    G.webRows() +
     '<div class="row" style="gap:6px;margin-top:4px"><button class="btn sm" id="gsLinkCp" type="button">🔗 연결 링크 복사</button><button class="btn sm" id="gsCodeCp" type="button">🔑 연결 코드 복사</button><span class="small" id="gsConnMsg"></span></div>' +
     '<div class="row" style="gap:6px;margin-top:6px"><label class="small">받은 링크·코드</label><input type="text" id="gsPaste" style="flex:1;min-width:200px" placeholder="링크 또는 BJC1.… 코드"><button class="btn sm" id="gsPasteOk" type="button">적용</button></div></div>' +
     '<label style="display:block;margin-top:8px"><input type="checkbox" id="gsOn" style="width:auto"' + (lsGet('bj-gs-on') === '0' ? '' : ' checked') + '> 구글시트에 저장·불러오기 사용</label>' +
@@ -26561,7 +26572,7 @@ UI.sheetDialog = function () {
     q('#gsShLink').onclick = async () => { store(); const l = G.cfgLink(); if (!l) { q('#gsShMsg').textContent = '웹 주소(https://…)로 연 화면에서만 만들 수 있습니다. 설정 코드를 쓰세요.'; return; } const ok = await copyText(l); q('#gsShMsg').textContent = ok ? '링크를 복사했습니다. 다른 기기 브라우저에서 열면 자동 적용됩니다.' : '복사하지 못했습니다.'; };
     const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch (e) { } };
     const cpy = async (t, okm) => { const m = q('#gsConnMsg'); if (!t) { m.textContent = '먼저 웹 앱 URL(4단계)을 저장하세요.'; return; } m.textContent = (await copyText(t)) ? okm : '복사하지 못했습니다.'; };
-    const saveWeb = () => { const w = q('#gsWeb').value.trim(); if (w && !q('#gsWeb').readOnly) lsSet('bj-webapp-url', w); };
+    const saveWeb = () => G.webSave(q);
     q('#gsLinkCp').onclick = () => { store(); saveWeb(); const l = G.connLink(); if (!l) { q('#gsConnMsg').textContent = '폰에서 열 웹 앱 주소를 먼저 적어 주세요(연결 코드는 바로 복사 가능).'; return; } cpy(l, '✔ 링크를 복사했습니다. 폰·다른 PC에서 여세요.'); };
     q('#gsCodeCp').onclick = () => { store(); saveWeb(); cpy(G.connCode(), '✔ 코드를 복사했습니다. 다른 기기의 「받은 링크·코드」 칸에 붙여넣으세요.'); };
     q('#gsPasteOk').onclick = () => { const o = G.parseConn(q('#gsPaste').value); if (!o) { q('#gsConnMsg').textContent = '✖ 링크·코드를 읽지 못했습니다.'; return; } G.applyConn(o); q('#gsUrl').value = G.url(); q('#gsKey').value = G.key(); q('#gsCid').value = G.cid(); q('#gsOn').checked = true; vKey(); vCid(); vUrl(); vCode(); q('#gsConnMsg').textContent = '✔ 연결을 적용했습니다.'; if (BJ.WS) BJ.WS.sync(true); };
